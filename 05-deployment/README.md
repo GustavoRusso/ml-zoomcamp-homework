@@ -9,7 +9,27 @@ The API accepts the eight observable fields in the release. Missing numeric
 values are replaced with medians calculated from the training CSV and recorded
 in `feature_defaults.json`; missing categories use `NA`.
 
+## DevContainer vs this homework’s Docker image
+
+The [repo DevContainer](../README.md) is for developing the whole course (IDE,
+Jupyter, root dependencies). It is **not** the image you ship for this
+homework.
+
+This folder’s [`Dockerfile`](Dockerfile) is a **service image**: a slim,
+digest-pinned Python 3.11 runtime that installs from the checked-in lockfile,
+copies only the API and model files, and starts `uvicorn` on port 9696. Use
+that image when you want a self-contained prediction service (Homework 10
+style). Use the DevContainer (or any host with `uv`) when you are editing and
+testing the code.
+
+This project pins **Python 3.11**. Prefer this folder’s own `uv sync --locked`
+and `.venv` over the course root `.venv` (Python 3.12) so local runs match the
+service image.
+
 ## Local run
+
+From this directory (inside the course DevContainer or any environment with
+`uv`):
 
 ```bash
 uv sync --locked
@@ -24,6 +44,8 @@ python q6_test.py
 ```
 
 ## Container run
+
+Build and run the deployment service image (not the DevContainer):
 
 ```bash
 docker build -t zoomcamp-model:2026-hw10 .
